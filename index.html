@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสอบผลสลากกินแบ่งรัฐบาล - งวดล่าสุด</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.static.app https://lotto.api.rayriffy.com https://fonts.googleapis.com https://fonts.gstatic.com data:;">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+        /* Wrapper */
+        .lotto-widget-wrapper {
+            font-family: 'Prompt', sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 51, 102, 0.15);
+            overflow: hidden;
+            border: 1px solid #e0e6ed;
+            position: relative;
+        }
+
+        /* Header */
+        .lotto-header {
+            background: linear-gradient(135deg, #003366 0%, #006699 50%, #008CBA 100%);
+            color: #ffffff;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .lotto-header h2 { margin: 0; font-size: 1.4rem; font-weight: 600; color: #fff !important; line-height: 1.4; }
+
+        /* Search Section */
+        .lotto-search-box {
+            padding: 25px; background-color: #f4f8fb; border-bottom: 1px solid #eef2f5; text-align: center;
+        }
+        .input-group { position: relative; max-width: 400px; margin: 0 auto 15px; }
+        .input-group input {
+            width: 100%; padding: 12px 15px 12px 45px;
+            border: 2px solid #cbd5e0; border-radius: 50px;
+            font-size: 1.1rem; font-family: 'Prompt', sans-serif;
+            outline: none; transition: border-color 0.3s; box-sizing: border-box;
+            text-align: center; letter-spacing: 2px;
+        }
+        .input-group input:focus { border-color: #008CBA; }
+        .search-icon {
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; fill: #8898aa;
+        }
+        .check-btn {
+            background: linear-gradient(90deg, #005f73 0%, #0a9396 100%);
+            color: white; border: none; padding: 12px 30px;
+            border-radius: 50px; font-size: 1rem; font-weight: 500;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(10, 147, 150, 0.3);
+            transition: all 0.2s; font-family: 'Prompt', sans-serif;
+        }
+        .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(10, 147, 150, 0.4); }
+
+        /* Result Display Section */
+        .lotto-results { padding: 25px; padding-bottom: 10px; }
+        .results-title { text-align: center; margin-bottom: 20px; }
+        .results-title h3 { color: #003366; margin: 0 0 5px 0; font-size: 1.5rem; font-weight: 700; }
+        .results-title p { color: #6c757d; font-size: 0.95rem; margin: 0; }
+
+        .prize-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .prize-card {
+            border: 1px solid #e1e8ed; border-radius: 12px; padding: 15px;
+            text-align: center; background: #fff; transition: box-shadow 0.3s;
+        }
+        .prize-card.first-prize { background: linear-gradient(to right, #f0f9ff, #e6fffa); border: 1px solid #b2f5ea; }
+        .prize-name { display: block; font-size: 0.9rem; color: #003366; margin-bottom: 8px; font-weight: 500; }
+        .prize-number {
+            display: block; font-size: 1.6rem; font-weight: 700; color: #005f73;
+            letter-spacing: 1px; line-height: 1.2; word-wrap: break-word;
+        }
+        .prize-money {
+            display: inline-block; margin-top: 5px; font-size: 0.85rem;
+            color: #2d6a4f; background: #e6fffa; padding: 2px 10px; border-radius: 4px; font-weight: 500;
+        }
+        .sub-prizes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        /* Checking Result Feedback */
+        #check-result-display { display: none; margin-top: 15px; padding: 15px; border-radius: 8px; text-align: center; }
+        .win-box { background-color: #d1fae5; border: 1px solid #34d399; color: #065f46; }
+        .lose-box { background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; }
+        
+        /* Share Section Styles */
+        .share-section {
+            padding: 20px 25px 30px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .share-title {
+            font-size: 0.9rem; color: #8898aa; margin-bottom: 15px; display: block;
+        }
+        .share-buttons {
+            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+        }
+        .share-btn {
+            width: 40px; height: 40px; border-radius: 50%; border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.2s; color: white;
+            text-decoration: none;
+        }
+        .share-btn:hover { transform: scale(1.1); }
+        .share-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        
+        /* Brand Colors */
+        .btn-fb { background-color: #1877F2; }
+        .btn-line { background-color: #06C755; }
+        .btn-x { background-color: #000000; }
+        .btn-tg { background-color: #24A1DE; }
+        .btn-copy { background-color: #6c757d; width: auto; padding: 0 15px; border-radius: 20px; font-size: 0.85rem;}
+        .btn-copy span { margin-left: 5px; }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.95); z-index: 10;
+            display: flex; justify-content: center; align-items: center; flex-direction: column; color: #006699;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #f3f3f3;
+            border-top: 4px solid #006699; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .sub-prizes { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="lotto-widget-wrapper" id="lotto-widget">
+  
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <span>กำลังอัพเดทข้อมูลงวดล่าสุด...</span>
+  </div>
+
+  <div class="lotto-header">
+    <h2>ตรวจสอบสลากกินแบ่งรัฐบาล งวดล่าสุด</h2>
+  </div>
+
+  <div class="lotto-search-box">
+    <div class="input-group">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+      <input type="text" id="lotto-input" maxlength="6" placeholder="กรอกเลข 6 หลัก" inputmode="numeric" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+    </div>
+    <button class="check-btn" onclick="checkLottoResult()">ตรวจผลสลากกินแบ่งรัฐบาล</button>
+    <div id="check-result-display"></div>
+  </div>
+
+  <div class="lotto-results">
+    <div class="results-title">
+      <h3>ผลสลากกินแบ่งรัฐบาล</h3>
+      <p id="draw-date-label">กำลังโหลดวันที่...</p>
+    </div>
+
+    <div class="prize-grid">
+      <div class="prize-card first-prize">
+        <span class="prize-name">รางวัลที่ 1</span>
+        <span class="prize-number" id="prize-1">--- ---</span>
+        <span class="prize-money">รางวัลละ 6,000,000 บาท</span>
+      </div>
+
+      <div class="sub-prizes">
+        <div class="prize-card">
+          <span class="prize-name">เลขหน้า 3 ตัว</span>
+          <span class="prize-number" id="prize-front-3">--- ---</span>
+          <span class="prize-money">รางวัลละ 4,000 บาท</span>
+        </div>
+        <div class="prize-card">
+          <span class="prize-name">เลขท้าย 3 ตัว</span>
+          <span class="prize-number" id="prize-back-3">--- ---</span>
+          <span class="prize-money">รางวัลละ 4,000 บาท</span>
+        </div>
+      </div>
+
+      <div class="prize-card">
+        <span class="prize-name">เลขท้าย 2 ตัว</span>
+        <span class="prize-number" id="prize-back-2">--</span>
+        <span class="prize-money">รางวัลละ 2,000 บาท</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-section">
+    <span class="share-title">แชร์ผลรางวัลให้เพื่อน</span>
+    <div class="share-buttons">
+      <a href="#" onclick="shareSocial('fb'); return false;" class="share-btn btn-fb" title="Share on Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.15 5.96C15.21 5.96 16.12 6.04 16.38 6.08V8.7H14.85C13.64 8.7 13.4 9.27 13.4 10.11V12.06H16.34L15.86 14.96H13.4V21.96C18.19 21.21 21.85 17.06 21.85 12.06C21.85 6.53 17.35 2.04 12 2.04Z"/></svg>
+      </a>
+      <a href="#" onclick="shareSocial('line'); return false;" class="share-btn btn-line" title="Share on LINE">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 5.86 2 10.62C2 14.73 5.39 18.18 9.94 19.06L9.65 20.67C9.65 20.67 9.46 21.15 9.87 21.36C10.28 21.57 10.74 21.15 10.74 21.15L14.07 18.97C14.17 18.96 14.28 18.95 14.39 18.95C14.7 18.98 15.02 19 15.34 19C20.86 19 25.34 15.14 25.34 10.38C25.34 5.62 20.86 2 15.34 2H12ZM7.25 12.23H6.07V9.01H7.25V12.23ZM9.63 12.23H8.45V9.01H9.63V12.23ZM13.84 12.23H11.44V9.01H12.62V11.23H13.84V12.23ZM17.26 10.02V11.12H15.53V12.23H14.35V9.01H17.26V10.02Z" transform="translate(-2 -2) scale(1.1)"/></svg>
+      </a>
+      <a href="#" onclick="shareSocial('x'); return false;" class="share-btn btn-x" title="Share on X">
+         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" onclick="shareSocial('tg'); return false;" class="share-btn btn-tg" title="Share on Telegram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      </a>
+      <button onclick="copyLink()" class="share-btn btn-copy" id="copy-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        <span id="copy-text">คัดลอกลิงค์</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentLottoData = { prize1: [], front3: [], back3: [], back2: [], date: '' };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchLatestLotto();
+  });
+
+  function fetchLatestLotto() {
+    const apiUrl = 'https://lotto.api.rayriffy.com/latest'; 
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        if(data.status === 'success') {
+          updateUI(data.response);
+        } else {
+          document.getElementById('draw-date-label').innerText = 'ไม่สามารถโหลดข้อมูลได้';
+          document.getElementById('loading-overlay').style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching lotto data:', error);
+        document.getElementById('draw-date-label').innerText = 'Connection Error (ตรวจสอบ Console)';
+        document.getElementById('loading-overlay').style.display = 'none';
+      });
+  }
+
+  function updateUI(data) {
+    document.getElementById('draw-date-label').innerText = `งวดประจำวันที่ ${data.date}`;
+    currentLottoData.date = data.date;
+
+    const p1 = data.prizes[0].number[0];
+    document.getElementById('prize-1').innerText = p1;
+    currentLottoData.prize1 = data.prizes[0].number;
+
+    const f3 = data.runningNumbers[0].number; 
+    document.getElementById('prize-front-3').innerText = f3.join('  ');
+    currentLottoData.front3 = f3;
+
+    const b3 = data.runningNumbers[1].number; 
+    document.getElementById('prize-back-3').innerText = b3.join('  ');
+    currentLottoData.back3 = b3;
+
+    const b2 = data.runningNumbers[2].number[0]; 
+    document.getElementById('prize-back-2').innerText = b2;
+    currentLottoData.back2 = data.runningNumbers[2].number;
+
+    document.getElementById('loading-overlay').style.display = 'none';
+  }
+
+  function checkLottoResult() {
+    const input = document.getElementById('lotto-input').value.trim();
+    const resultBox = document.getElementById('check-result-display');
+    
+    if (!input || input.length !== 6 || isNaN(input)) {
+      alert("กรุณากรอกตัวเลขให้ครบ 6 หลัก"); return;
+    }
+
+    let isWin = false;
+    let winMessage = "";
+
+    if (currentLottoData.prize1.includes(input)) { isWin = true; winMessage += `🎉 ยินดีด้วย! คุณถูกรางวัลที่ 1<br>`; }
+    if (currentLottoData.front3.includes(input.substring(0, 3))) { isWin = true; winMessage += `🎉 ยินดีด้วย! คุณถูกรางวัลเลขหน้า 3 ตัว<br>`; }
+    if (currentLottoData.back3.includes(input.substring(3, 6))) { isWin = true; winMessage += `🎉 ยินดีด้วย! คุณถูกรางวัลเลขท้าย 3 ตัว<br>`; }
+    if (currentLottoData.back2.includes(input.substring(4, 6))) { isWin = true; winMessage += `🎉 ยินดีด้วย! คุณถูกรางวัลเลขท้าย 2 ตัว<br>`; }
+
+    resultBox.style.display = 'block';
+    if (isWin) {
+      resultBox.className = 'win-box';
+      resultBox.innerHTML = `<span style="font-weight:bold; font-size:1.2rem;">ยินดีด้วยคุณถูกรางวัล!</span>${winMessage}`;
+    } else {
+      resultBox.className = 'lose-box';
+      resultBox.innerHTML = `<span style="font-weight:bold; font-size:1.2rem;">เสียใจด้วย ไม่ถูกรางวัล</span>เลข ${input} ไม่ตรงกับรางวัลใดๆ`;
+    }
+  }
+
+  function shareSocial(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("ตรวจผลสลากกินแบ่งรัฐบาลล่าสุดได้ที่นี่: ");
+    let shareUrl = '';
+
+    switch(platform) {
+      case 'fb': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+      case 'line': shareUrl = `https://social-plugins.line.me/lineit/share?url=${url}`; break;
+      case 'x': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
+      case 'tg': shareUrl = `https://t.me/share/url?url=${url}&text=${text}`; break;
+    }
+    
+    if(shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+  }
+
+  function copyLink() {
+    const url = window.location.href;
+    const btn = document.getElementById('copy-btn');
+    const txt = document.getElementById('copy-text');
+    
+    navigator.clipboard.writeText(url).then(() => {
+      const originalText = txt.innerText;
+      txt.innerText = "คัดลอกแล้ว!";
+      btn.style.background = "#2d6a4f"; 
+      
+      setTimeout(() => {
+        txt.innerText = originalText;
+        btn.style.background = "#6c757d";
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+</script>
+
+</body>
+</html>
